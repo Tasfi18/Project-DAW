@@ -1,0 +1,122 @@
+-- Seed data for software_products
+INSERT INTO software_products (
+  slug, name_en, name_da, description_en, description_da,
+  category, features_en, features_da, tech_stack, display_order, is_active
+) VALUES 
+(
+  'smart-ems-platform',
+  'Smart EMS Platform',
+  'Smart EMS Platform',
+  'AI-powered energy management system for monitoring and optimizing facility energy consumption with real-time IoT integration.',
+  'AI-drevet energistyringssystem til overvågning og optimering af facilitetsenergiforbrug med realtids IoT-integration.',
+  1,
+  ARRAY['Real-time monitoring', 'AI demand prediction', 'Automated optimization', 'IoT sensor integration'],
+  ARRAY['Realtidsovervågning', 'AI efterspørgselsprognose', 'Automatiseret optimering', 'IoT sensor integration'],
+  ARRAY['Python', 'TensorFlow', 'Azure IoT', 'React'],
+  1,
+  true
+),
+(
+  'gridflow-smart-grid',
+  'GridFlow Smart Grid',
+  'GridFlow Smart Grid',
+  'Comprehensive smart grid software for utilities managing distributed energy resources and renewable integration.',
+  'Omfattende smart grid software til forsyningsselskaber, der styrer distribuerede energiressourcer og integration af vedvarende energi.',
+  2,
+  ARRAY['DER management', 'Renewable integration', 'Predictive maintenance', 'Real-time balancing'],
+  ARRAY['DER styring', 'Vedvarende integration', 'Prædiktiv vedligeholdelse', 'Realtidsbalancering'],
+  ARRAY['Java', 'Apache Kafka', 'TimescaleDB', 'Angular'],
+  2,
+  true
+),
+(
+  'energyplan-pro',
+  'EnergyPlan Pro',
+  'EnergyPlan Pro',
+  'Strategic energy system modeling software for long-term planning and renewable capacity optimization.',
+  'Strategisk energisystem-modelleringssoftware til langsigtet planlægning og optimering af vedvarende kapacitet.',
+  3,
+  ARRAY['Scenario modeling', 'Capacity optimization', 'Cost-emission analysis', 'Policy simulation'],
+  ARRAY['Scenariemodellering', 'Kapacitetsoptimering', 'Omkostnings-emissionsanalyse', 'Politiksimulering'],
+  ARRAY['Python', 'GAMS', 'Julia', 'NumPy'],
+  3,
+  true
+),
+(
+  'building-simulator',
+  'Building Energy Simulator',
+  'Bygningsenergisimulator',
+  'Advanced simulation platform for buildings and microgrids with AI-enhanced load forecasting.',
+  'Avanceret simuleringsplatform til bygninger og microgrids med AI-forbedret belastningsprognose.',
+  4,
+  ARRAY['Building modeling', 'Microgrid simulation', 'AI forecasting', 'HVAC optimization'],
+  ARRAY['Bygningsmodellering', 'Microgrid simulering', 'AI prognoser', 'HVAC optimering'],
+  ARRAY['EnergyPlus', 'Python', 'TensorFlow', 'MongoDB'],
+  4,
+  true
+),
+(
+  'flexigrid-dr',
+  'FlexiGrid Demand Response',
+  'FlexiGrid Efterspørgselsstyring',
+  'Automated demand response platform for intelligent load shifting and peak reduction.',
+  'Automatiseret efterspørgselsstyringsplatform til intelligent belastningsforskydning og spidsreduktion.',
+  5,
+  ARRAY['Automated shifting', 'Peak reduction', 'Grid signals', 'AI optimization'],
+  ARRAY['Automatiseret forskydning', 'Spidsreduktion', 'Netsignaler', 'AI optimering'],
+  ARRAY['Node.js', 'Redis', 'Machine Learning', 'Vue.js'],
+  5,
+  true
+),
+(
+  'energychain-p2p',
+  'EnergyChain P2P',
+  'EnergyChain P2P',
+  'Blockchain-powered peer-to-peer energy trading platform for prosumers and local energy markets.',
+  'Blockchain-drevet peer-to-peer energihandelsplatform til prosumere og lokale energimarkeder.',
+  6,
+  ARRAY['Blockchain trading', 'P2P transactions', 'Smart contracts', 'Local markets'],
+  ARRAY['Blockchain handel', 'P2P transaktioner', 'Smart contracts', 'Lokale markeder'],
+  ARRAY['Ethereum', 'Hyperledger', 'Solidity', 'React'],
+  6,
+  true
+),
+(
+  'carbontrack-esg',
+  'CarbonTrack ESG',
+  'CarbonTrack ESG',
+  'Comprehensive carbon and emissions tracking platform for ESG reporting and compliance.',
+  'Omfattende kulstof- og emissionssporingsplatform til ESG-rapportering og overholdelse.',
+  7,
+  ARRAY['Emissions tracking', 'ESG reporting', 'Compliance', 'Carbon offsets'],
+  ARRAY['Emissionssporing', 'ESG rapportering', 'Overholdelse', 'CO2 kompensation'],
+  ARRAY['Python', 'Django', 'PostgreSQL', 'D3.js'],
+  7,
+  true
+),
+(
+  'ecovisor-virtual',
+  'EcoVisor Virtual Energy',
+  'EcoVisor Virtuel Energi',
+  'Virtual energy system platform enabling carbon-aware computing for data centers.',
+  'Virtuel energisystemplatform, der muliggør kulstofbevidst computing til datacentre.',
+  8,
+  ARRAY['Energy virtualization', 'Carbon-aware computing', 'Workload shifting', 'Grid monitoring'],
+  ARRAY['Energivirtualisering', 'Kulstofbevidst computing', 'Arbejdsbyrdeforskydning', 'Netovervågning'],
+  ARRAY['Go', 'Kubernetes', 'Prometheus', 'gRPC'],
+  8,
+  true
+),
+(
+  'quantum-optimizer',
+  'Quantum Energy Optimizer',
+  'Quantum Energi Optimizer',
+  'Quantum computing platform for solving complex energy optimization problems.',
+  'Kvantecomputingplatform til løsning af komplekse energioptimerningsproblemer.',
+  9,
+  ARRAY['Quantum algorithms', 'DER allocation', 'Grid optimization', 'Real-time scheduling'],
+  ARRAY['Kvantealgoritmer', 'DER allokering', 'Netoptimering', 'Realtidsplanlægning'],
+  ARRAY['Qiskit', 'Python', 'Q#', 'Azure Quantum'],
+  9,
+  true
+);
