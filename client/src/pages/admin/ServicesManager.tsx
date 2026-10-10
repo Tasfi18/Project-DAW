@@ -772,6 +772,13 @@ export const ServicesManager = ({ onNotify }: ServicesManagerProps) => {
                       
                       {/* Action buttons */}
                       <button
+                        onClick={() => void handleToggleActive(service)}
+                        className="p-2 hover:bg-gray-100 text-gray-600 rounded transition-colors"
+                        title={service.is_active ? 'Hide service' : 'Publish service'}
+                      >
+                        {service.is_active ? <Icons.Eye /> : <Icons.EyeOff />}
+                      </button>
+                      <button
                         onClick={() => handleEdit(service)}
                         className="p-2 hover:bg-blue-50 text-blue-600 rounded transition-colors"
                         title="Edit service"

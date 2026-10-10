@@ -8,6 +8,33 @@ const api = axios.create({
   timeout: 10000,
 });
 
+// Admin session token, issued by the server after the admin password is checked.
+const TOKEN_KEY = 'adminToken';
+
+export const adminSession = {
+  get: (): string | null => sessionStorage.getItem(TOKEN_KEY),
+  set: (token: string) => sessionStorage.setItem(TOKEN_KEY, token),
+  clear: () => sessionStorage.removeItem(TOKEN_KEY),
+};
+
+api.interceptors.request.use((config) => {
+  const token = adminSession.get();
+  if (token) config.headers.Authorization = `Bearer ${token}`;
+  return config;
+});
+
+// If the session has expired, sign out so the login screen is shown again.
+api.interceptors.response.use(
+  (response) => response,
+  (error: unknown) => {
+    if (axios.isAxiosError(error) && error.response?.status === 401 && adminSession.get()) {
+      adminSession.clear();
+      window.location.assign('/admin');
+    }
+    return Promise.reject(error);
+  },
+);
+
 export interface ContentSection {
   id: string;
   section_key: string;
@@ -132,6 +159,9 @@ export interface SoftwareProduct {
 }
 
 export const apiService = {
+  adminLogin: (password: string) =>
+    api.post<{ token: string }>('/api/admin/login', { password }).then(res => res.data.token),
+
   getContent: () => api.get<ContentSection[]>('/api/content').then(res => res.data),
   getTeam: () => api.get<TeamMember[]>('/api/team').then(res => res.data),
   getSDG: () => api.get<SDGGoal[]>('/api/sdg').then(res => res.data),
