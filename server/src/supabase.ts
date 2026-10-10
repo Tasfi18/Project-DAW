@@ -4,7 +4,9 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 const supabaseUrl = process.env.SUPABASE_URL!;
-const supabaseKey = process.env.SUPABASE_ANON_KEY!;
+// The server is the only place that talks to Supabase, so it can use the service role key.
+// The anon key still works for databases without row-level security.
+const supabaseKey = (process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.SUPABASE_ANON_KEY)!;
 
 export const supabase = createClient(supabaseUrl, supabaseKey);
 

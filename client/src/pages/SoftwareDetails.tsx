@@ -87,8 +87,6 @@ export const SoftwareDetails = () => {
     );
   }
 
-  const categoryName = categoryNames[software.category];
-
   return (
     <div className="min-h-screen bg-gradient-to-b from-white via-sand/10 to-primary/5">
       <div className="container mx-auto px-4 sm:px-6 md:px-8 max-w-5xl pt-12 sm:pt-14 pb-12 sm:pb-16 md:pb-20">
@@ -113,6 +111,11 @@ export const SoftwareDetails = () => {
         >
           {/* Title & Description */}
           <div className="text-center mb-8">
+            {categoryNames[software.category] && (
+              <span className="inline-block mb-3 px-3 py-1 rounded-full text-sm bg-primary/10 text-primary">
+                {categoryNames[software.category][language]}
+              </span>
+            )}
             <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-4 gradient-text-emerald">
               {language === 'en' ? software.name_en : software.name_da}
             </h1>

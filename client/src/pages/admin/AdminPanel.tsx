@@ -1,12 +1,10 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { apiService, ContentSection, TeamMember, SDGGoal, ContactInfo, ContactMessage } from '../../services/api';
+import { apiService, adminSession, ContentSection, TeamMember, SDGGoal, ContactInfo, ContactMessage } from '../../services/api';
 import { ServicesManager } from './ServicesManager';
 import { WorkProcessManager } from './WorkProcessManager';
 import { SoftwareManager } from './SoftwareManager';
-
-const ADMIN_PASSWORD = 'angel2024';
 
 // Component prop types
 interface EditorProps {
@@ -41,18 +39,19 @@ const Icons = {
 };
 
 export const AdminPanel = () => {
-  const [isAuth, setIsAuth] = useState(() => localStorage.getItem('adminAuth') === 'true');
+  const [isAuth, setIsAuth] = useState(() => adminSession.get() !== null);
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const navigate = useNavigate();
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (password === ADMIN_PASSWORD) {
+    try {
+      // The password is checked by the server, which returns a session token.
+      adminSession.set(await apiService.adminLogin(password));
       setIsAuth(true);
-      localStorage.setItem('adminAuth', 'true');
       setError('');
-    } else {
+    } catch {
       setError('Incorrect password. Please try again.');
       setPassword('');
     }
@@ -60,7 +59,7 @@ export const AdminPanel = () => {
 
   const handleLogout = () => {
     setIsAuth(false);
-    localStorage.removeItem('adminAuth');
+    adminSession.clear();
     navigate('/admin');
   };
 
@@ -499,77 +498,6 @@ const LeadershipTab = ({ content, onSave, saving }: TabProps) => (
     )}
   </div>
 );
-
-const ServicesTab = ({ content, onSave, saving }: TabProps) => {
-  const [showAdd, setShowAdd] = useState(false);
-  const [newService, setNewService] = useState({ title: '', content: '' });
-
-  const handleCreate = async () => {
-    if (!newService.title || !newService.content) return;
-    
-    // Auto-generate section_key from title
-    const sectionKey = 'service_' + newService.title.toLowerCase().replace(/\s+/g, '_').replace(/[^a-z0-9_]/g, '');
-    
-    try {
-      await apiService.createContent({ 
-        section_key: sectionKey, 
-        title: newService.title, 
-        content: newService.content 
-      });
-      window.location.reload();
-    } catch (error) {
-      console.error('Failed to create service:', error);
-    }
-  };
-
-  return (
-    <div className="space-y-6">
-      <div className="bg-white rounded-xl shadow-sm border p-6">
-        <button
-          onClick={() => setShowAdd(!showAdd)}
-          className="flex items-center gap-2 px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary/90"
-        >
-          {showAdd ? <Icons.Cancel /> : <Icons.Add />}
-          {showAdd ? 'Cancel' : 'Add New Service'}
-        </button>
-        
-        {showAdd && (
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="mt-4 space-y-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Service Title</label>
-              <input
-                type="text"
-                value={newService.title}
-                onChange={e => setNewService({ ...newService, title: e.target.value })}
-                className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-primary"
-                placeholder="e.g., Advanced Robotics Solutions"
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Service Description</label>
-              <textarea
-                value={newService.content}
-                onChange={e => setNewService({ ...newService, content: e.target.value })}
-                rows={4}
-                className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-primary"
-                placeholder="Describe the service in detail..."
-              />
-            </div>
-            <button onClick={() => void handleCreate()} className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700">
-              Create Service
-            </button>
-          </motion.div>
-        )}
-      </div>
-      
-      {content.filter((item: ContentSection) => 
-        item.section_key === 'services' || item.section_key?.startsWith('service')
-      ).map((item: ContentSection) => 
-        <ContentEditor key={item.id} item={item} onSave={onSave} saving={saving} />
-      )}
-    </div>
-  );
-};
 
 const TeamTab = ({ team, onSave, saving }: { 
   team: TeamMember[];

@@ -3,6 +3,12 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import multer from 'multer';
 import { supabase } from './supabase.js';
+import {
+  checkAdminPassword,
+  createAdminToken,
+  requireAdminForPrivateRoutes,
+  tokenSecret,
+} from './auth.js';
 
 dotenv.config();
 
@@ -121,18 +127,32 @@ interface CountryOfficeInput {
 }
 
 // Validate required environment variables
-const requiredEnvVars = ['SUPABASE_URL', 'SUPABASE_ANON_KEY'];
+const requiredEnvVars = ['SUPABASE_URL', 'ADMIN_PASSWORD', 'ADMIN_TOKEN_SECRET'];
 requiredEnvVars.forEach(varName => {
   if (!process.env[varName]) {
     throw new Error(`Missing required environment variable: ${varName}`);
   }
 });
+if (!process.env.SUPABASE_SERVICE_ROLE_KEY && !process.env.SUPABASE_ANON_KEY) {
+  throw new Error('Set SUPABASE_SERVICE_ROLE_KEY (recommended) or SUPABASE_ANON_KEY');
+}
 
 const app = express();
 const PORT = process.env.PORT || 5000;
 
 app.use(cors());
 app.use(express.json());
+
+// Admin sign-in: checks the password on the server and returns a signed token.
+app.post('/api/admin/login', (req: Request, res: Response) => {
+  if (!checkAdminPassword(req.body?.password)) {
+    return res.status(401).json({ error: 'Incorrect password' });
+  }
+  res.json({ token: createAdminToken(tokenSecret()) });
+});
+
+// Every change, the admin lists and the contact messages need that token.
+app.use('/api', requireAdminForPrivateRoutes);
 
 // Health check
 app.get('/health', (_req: Request, res: Response) => {
